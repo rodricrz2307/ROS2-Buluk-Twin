@@ -6,7 +6,7 @@ single launch file.
 
 ## The Robot
 
-**Buluk** is an FRC competition robot that collects game pieces with an intake, transports
+**Buluk** is an FRC team based in PrepaTec CEM. I decided to use the competition robot from Buluk. It collects game pieces with an intake, transports
 them, and shoots them using an adjustable-angle mechanism.
 
 - **Degrees of freedom:** 6
