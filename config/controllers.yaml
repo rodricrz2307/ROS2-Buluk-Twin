@@ -1,0 +1,20 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    buluk_controller:
+      type: forward_command_controller/ForwardCommandController
+
+buluk_controller:
+  ros__parameters:
+    joints:
+      - intake_arm_joint
+      - angulator_joint
+      - tambor_joint
+      - box_joint
+      - roller1_joint
+      - roller2_joint
+    interface_name: position

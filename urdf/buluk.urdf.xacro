@@ -1,0 +1,197 @@
+<?xml version="1.0"?>
+<robot name="buluk" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:property name="pkg" value="package://buluk_twin/meshes"/>
+
+  <material name="gris"><color rgba="0.6 0.6 0.6 1"/></material>
+  <material name="azul"><color rgba="0 0.64 0.84 1"/></material>
+  <material name="verde"><color rgba="0.4 0.61 0.21 1"/></material>
+  <material name="morado"><color rgba="0.58 0.13 0.57 1"/></material>
+  <material name="rojo"><color rgba="0.73 0.18 0.36 1"/></material>
+  <material name="cian"><color rgba="0 0.99 1 1"/></material>
+
+  <xacro:macro name="inercia" params="m x y z">
+    <inertial>
+      <mass value="${m}"/>
+      <inertia ixx="${m*(y*y+z*z)/12}" iyy="${m*(x*x+z*z)/12}" izz="${m*(x*x+y*y)/12}"
+               ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </xacro:macro>
+
+  <link name="world"/>
+  <joint name="world_joint" type="fixed">
+    <parent link="world"/><child link="base_link"/>
+  </joint>
+
+  <link name="base_link">
+    <visual>
+      <geometry><mesh filename="${pkg}/RobotBase.stl"/></geometry>
+      <material name="gris"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.1"/>
+      <geometry><box size="0.7 0.7 0.2"/></geometry>
+    </collision>
+    <xacro:inercia m="20" x="0.7" y="0.7" z="0.2"/>
+  </link>
+
+  <joint name="intake_arm_joint" type="revolute">
+    <parent link="base_link"/><child link="intake_arm"/>
+    <origin xyz="0 -0.18 0.20"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="-1.920" upper="0" effort="100" velocity="3"/>
+    <dynamics damping="1"/>
+  </joint>
+  <link name="intake_arm">
+    <visual>
+      <origin xyz="0 0.18 -0.20"/>
+      <geometry><mesh filename="${pkg}/IntakeArm.stl"/></geometry>
+      <material name="azul"/>
+    </visual>
+    <collision>
+      <origin xyz="0 -0.16 -0.03"/>
+      <geometry><box size="0.6 0.3 0.15"/></geometry>
+    </collision>
+    <xacro:inercia m="2" x="0.6" y="0.3" z="0.15"/>
+  </link>
+
+  <joint name="angulator_joint" type="revolute">
+    <parent link="base_link"/><child link="angulator"/>
+    <origin xyz="0 0.32 0.48"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="1.536" upper="2.409" effort="100" velocity="3"/>
+    <dynamics damping="1"/>
+  </joint>
+  <link name="angulator">
+    <visual>
+      <origin xyz="0 -0.32 -0.48"/>
+      <geometry><mesh filename="${pkg}/Angulator.stl"/></geometry>
+      <material name="verde"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0.04 0.08"/>
+      <geometry><box size="0.6 0.2 0.15"/></geometry>
+    </collision>
+    <xacro:inercia m="2" x="0.6" y="0.2" z="0.15"/>
+  </link>
+
+  <joint name="tambor_joint" type="continuous">
+    <parent link="base_link"/><child link="tambor"/>
+    <origin xyz="0 0.32 0.48"/>
+    <axis xyz="1 0 0"/>
+    <dynamics damping="0.1"/>
+  </joint>
+  <link name="tambor">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 -1.5708"/>
+      <geometry><mesh filename="${pkg}/Tambor.stl" scale="1.08 1.08 1.08"/></geometry>
+      <material name="morado"/>
+    </visual>
+    <collision>
+      <origin rpy="0 1.5708 0"/>
+      <geometry><cylinder radius="0.05" length="0.5"/></geometry>
+    </collision>
+    <xacro:inercia m="0.5" x="0.5" y="0.1" z="0.1"/>
+  </link>
+
+  <joint name="box_joint" type="prismatic">
+    <parent link="base_link"/><child link="box"/>
+    <origin xyz="0 0.14 0.45"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-0.23" upper="0" effort="200" velocity="0.5"/>
+    <dynamics damping="5"/>
+  </joint>
+  <link name="box">
+    <visual>
+      <origin xyz="0 0 -0.45"/>
+      <geometry><mesh filename="${pkg}/Box.stl"/></geometry>
+      <material name="rojo"/>
+    </visual>
+    <collision>
+      <origin xyz="0 -0.16 0.05"/>
+      <geometry><box size="0.6 0.3 0.3"/></geometry>
+    </collision>
+    <xacro:inercia m="3" x="0.6" y="0.3" z="0.3"/>
+  </link>
+
+  <joint name="roller1_joint" type="continuous">
+    <parent link="base_link"/><child link="roller1"/>
+    <origin xyz="0 -0.185 0.19"/>
+    <axis xyz="1 0 0"/>
+    <dynamics damping="0.1"/>
+  </joint>
+  <link name="roller1">
+    <visual>
+      <origin xyz="0 0.205 -0.21"/>
+      <geometry><mesh filename="${pkg}/Roller.stl" scale="1.15 1.15 1.15"/></geometry>
+      <material name="cian"/>
+    </visual>
+    <collision>
+      <origin rpy="0 1.5708 0"/>
+      <geometry><cylinder radius="0.03" length="0.5"/></geometry>
+    </collision>
+    <xacro:inercia m="0.3" x="0.5" y="0.06" z="0.06"/>
+  </link>
+
+  <joint name="roller2_joint" type="continuous">
+    <parent link="base_link"/><child link="roller2"/>
+    <origin xyz="0 0.22 0.10"/>
+    <axis xyz="1 0 0"/>
+    <dynamics damping="0.1"/>
+  </joint>
+  <link name="roller2">
+    <visual>
+      <origin xyz="0 0.24 -0.24"/>
+      <geometry><mesh filename="${pkg}/Roller.stl" scale="1.35 1.35 1.35"/></geometry>
+      <material name="cian"/>
+    </visual>
+    <collision>
+      <origin rpy="0 1.5708 0"/>
+      <geometry><cylinder radius="0.035" length="0.5"/></geometry>
+    </collision>
+    <xacro:inercia m="0.3" x="0.5" y="0.07" z="0.07"/>
+  </link>
+      <!-- ===== ros2_control: interfaz entre ROS2 y Gazebo ===== -->
+  <ros2_control name="BulukSystem" type="system">
+    <hardware>
+      <plugin>ign_ros2_control/IgnitionSystem</plugin>
+    </hardware>
+    <joint name="intake_arm_joint">
+      <command_interface name="position"/>
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="angulator_joint">
+      <command_interface name="position"/>
+      <state_interface name="position"><param name="initial_value">1.536</param></state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="tambor_joint">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="box_joint">
+      <command_interface name="position"/>
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="roller1_joint">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="roller2_joint">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+  </ros2_control>
+
+  <!-- Plugin que conecta Gazebo con ros2_control -->
+  <gazebo>
+    <plugin filename="libign_ros2_control-system.so" name="ign_ros2_control::IgnitionROS2ControlPlugin">
+      <parameters>$(find buluk_twin)/config/controllers.yaml</parameters>
+    </plugin>
+  </gazebo>
+</robot>
